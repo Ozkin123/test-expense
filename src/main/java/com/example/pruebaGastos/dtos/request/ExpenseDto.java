@@ -1,4 +1,4 @@
-package com.example.pruebaGastos.dtos;
+package com.example.pruebaGastos.dtos.request;
 
 import lombok.*;
 

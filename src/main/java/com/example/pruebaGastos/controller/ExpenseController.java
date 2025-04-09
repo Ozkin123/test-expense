@@ -1,19 +1,14 @@
 package com.example.pruebaGastos.controller;
 
-import com.example.pruebaGastos.dtos.ExpenseDto;
-import com.example.pruebaGastos.entity.ExpenseEntity;
-import com.example.pruebaGastos.repository.ExpenseRepository;
+import com.example.pruebaGastos.dtos.request.ExpenseDto;
+import com.example.pruebaGastos.dtos.response.ExpenseResponse;
 import com.example.pruebaGastos.service.IExpenseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -25,10 +20,10 @@ public class ExpenseController {
 
       private final IExpenseService service;
 
-//    @GetMapping("/expense")
-//    public List<ExpenseEntity> getEntity(){
-//       return expenseRepository.findAll();
-//    }
+    @GetMapping("/expense")
+    public ResponseEntity<List<ExpenseResponse>> getAllExpense(){
+       return new ResponseEntity<>(service.getAllExpense(),HttpStatus.OK);
+    }
 
      @PostMapping("/expense")
     public ResponseEntity<ExpenseDto> upExpense(@RequestBody ExpenseDto dto){
