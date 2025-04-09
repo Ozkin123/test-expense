@@ -1,17 +1,27 @@
 package com.example.pruebaGastos.controller;
 
 import com.example.pruebaGastos.dtos.ExpenseDto;
+import com.example.pruebaGastos.entity.ExpenseEntity;
+import com.example.pruebaGastos.repository.ExpenseRepository;
 import com.example.pruebaGastos.service.IExpenseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
 @RequiredArgsConstructor
 public class ExpenseController {
+
+//      @Autowired
+//    ExpenseRepository expenseRepository;
 
       private final IExpenseService service;
 
@@ -19,7 +29,7 @@ public class ExpenseController {
 //    public List<ExpenseEntity> getEntity(){
 //       return expenseRepository.findAll();
 //    }
-//
+
      @PostMapping("/expense")
     public ResponseEntity<ExpenseDto> upExpense(@RequestBody ExpenseDto dto){
        return new ResponseEntity<>(service.addExpense(dto), HttpStatus.CREATED);
