@@ -3,11 +3,15 @@ package com.example.pruebaGastos.controller;
 import com.example.pruebaGastos.dtos.request.ExpenseDto;
 import com.example.pruebaGastos.dtos.response.ExpenseResponse;
 import com.example.pruebaGastos.service.IExpenseService;
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.auth.Credentials;
+import com.google.cloud.spring.core.GcpProjectIdProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -17,6 +21,7 @@ public class ExpenseController {
 
 //      @Autowired
 //    ExpenseRepository expenseRepository;
+      private final CredentialsProvider provider;
 
       private final IExpenseService service;
 
@@ -28,6 +33,11 @@ public class ExpenseController {
      @PostMapping("/expense")
     public ResponseEntity<ExpenseDto> upExpense(@RequestBody ExpenseDto dto){
        return new ResponseEntity<>(service.addExpense(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/provide")
+    public Credentials get() throws IOException {
+        return provider.getCredentials();
     }
 //
 //    @PutMapping("/expense/{id}")
