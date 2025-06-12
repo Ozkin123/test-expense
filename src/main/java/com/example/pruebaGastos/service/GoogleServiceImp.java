@@ -2,19 +2,25 @@ package com.example.pruebaGastos.service;
 
 import com.google.cloud.storage.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 @Service
 public class GoogleServiceImp implements IGoogleService {
 
+    private String projectId = "bocataexpense";
+    private String bucketName = "gasto_img";
 
 
     @Override
     public String uploadObject(
-            String projectId, String bucketName, String objectName, InputStream inputStream) throws IOException {
-
+            String objectName, MultipartFile file) throws IOException {
+        if(file==null||file.isEmpty()){
+            return "no se subio imagen";
+        }
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         BlobId blobId = BlobId.of(bucketName, objectName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
@@ -31,7 +37,7 @@ public class GoogleServiceImp implements IGoogleService {
 
         try {
 
-            storage.createFrom(blobInfo, inputStream, precondition);
+            storage.createFrom(blobInfo, file.getInputStream(), precondition);
             return String.format("https://storage.googleapis.com/%s/%s", bucketName, objectName);
         } catch (StorageException e) {
             if (alreadyExists) {

@@ -20,8 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseController {
 
-     private String projectId = "bocataexpense";
-     private String bucketName = "gasto_img";
+
 
      private final IGoogleService serviceGoogle;
      private final IExpenseService service;
@@ -31,12 +30,10 @@ public class ExpenseController {
        return new ResponseEntity<>(service.getAllExpense(),HttpStatus.OK);
     }
 
-    @PostMapping(value = "/expense", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
-    public ResponseEntity<ExpenseResponseGoogle> uploadIMG(@RequestPart("file") MultipartFile file, @RequestPart("dto") ExpenseDto dto) throws IOException {
-        String url = serviceGoogle.uploadObject(projectId,bucketName,dto.getName(),file.getInputStream());
+    @PostMapping(value = "/expense", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ExpenseResponseGoogle> uploadIMG(@RequestPart(value = "file",required = false) MultipartFile file, @RequestPart("dto") ExpenseDto dto) throws IOException {
+        String url = serviceGoogle.uploadObject(dto.getName(),file);
         return new ResponseEntity<>(service.addExpense(dto,url),HttpStatus.CREATED);
-
-
     }
 
 
