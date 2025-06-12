@@ -3,37 +3,42 @@ package com.example.pruebaGastos.google.auth;
 
 
 
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
+
 
 @Service
 public class UploadObject {
-    public void uploadObject(
-            String projectId, String bucketName, String objectName, InputStream inputStream) throws IOException {
+        public String uploadObject(
+                String projectId, String bucketName, String objectName, InputStream inputStream) throws IOException {
 
+            Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+            BlobId blobId = BlobId.of(bucketName, objectName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 
-        Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-        BlobId blobId = BlobId.of(bucketName, objectName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Storage.BlobWriteOption precondition;
+            boolean alreadyExists = (storage.get(bucketName, objectName) != null);
 
+            if (!alreadyExists) {
+                precondition = Storage.BlobWriteOption.doesNotExist();
+            } else {
+                precondition = Storage.BlobWriteOption.generationMatch(
+                        storage.get(bucketName, objectName).getGeneration());
+            }
 
-        Storage.BlobWriteOption precondition;
-        if (storage.get(bucketName, objectName) == null) {
+            try {
 
-            precondition = Storage.BlobWriteOption.doesNotExist();
-        } else {
-
-            precondition =
-                    Storage.BlobWriteOption.generationMatch(
-                            storage.get(bucketName, objectName).getGeneration());
+                storage.createFrom(blobInfo, inputStream, precondition);
+                return String.format("https://storage.googleapis.com/%s/%s", bucketName, objectName);
+            } catch (StorageException e) {
+                if (alreadyExists) {
+                    return String.format("https://storage.googleapis.com/%s/%s", bucketName, objectName);
+                }
+                return "no se subio imagen";
+            }
         }
-        storage.createFrom(blobInfo, inputStream, precondition);
-    }
 }
+

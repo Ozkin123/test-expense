@@ -22,6 +22,8 @@ public class ExpenseEntity {
 
     @Id
     private String id;
+    private String name;
+    private String url;
     private String description;
     private BigDecimal value;
     private LocalDate date;

@@ -1,8 +1,10 @@
 package com.example.pruebaGastos.service;
 
 import com.example.pruebaGastos.dtos.request.ExpenseDto;
-import com.example.pruebaGastos.dtos.response.ExpenseResponse;
+import com.example.pruebaGastos.entity.response.ExpenseResponse;
 import com.example.pruebaGastos.entity.ExpenseEntity;
+import com.example.pruebaGastos.entity.response.ExpenseResponseGoogle;
+import com.example.pruebaGastos.google.auth.UploadObject;
 import com.example.pruebaGastos.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,15 @@ public class ExpenseServiceImp implements IExpenseService{
     private final ExpenseRepository repository;
 
     @Override
-    public ExpenseDto addExpense(ExpenseDto dto) {
+    public ExpenseResponseGoogle addExpense(ExpenseDto dto,String url) {
         ExpenseEntity entity = new ExpenseEntity();
+        ExpenseResponseGoogle response = new ExpenseResponseGoogle(url, dto.getDescription(),dto.getValue(), dto.getName());
+        entity.setUrl(url);
         entity.setDescription(dto.getDescription());
         entity.setValue(dto.getValue());
         entity.setDate(LocalDate.now());
         repository.insert(entity);
-        return dto;
+        return response ;
     }
 
     @Override

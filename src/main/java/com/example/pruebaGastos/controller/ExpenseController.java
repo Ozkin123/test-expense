@@ -1,15 +1,16 @@
 package com.example.pruebaGastos.controller;
 
 import com.example.pruebaGastos.dtos.request.ExpenseDto;
-import com.example.pruebaGastos.dtos.response.ExpenseResponse;
+import com.example.pruebaGastos.entity.response.ExpenseResponse;
+import com.example.pruebaGastos.entity.response.ExpenseResponseGoogle;
 import com.example.pruebaGastos.service.IExpenseService;
-import com.google.api.gax.core.CredentialsProvider;
-import com.google.auth.Credentials;
-import com.google.cloud.spring.core.GcpProjectIdProvider;
+import com.example.pruebaGastos.service.IGoogleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,26 +20,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseController {
 
-//      @Autowired
-//    ExpenseRepository expenseRepository;
-      private final CredentialsProvider provider;
+     private String projectId = "bocataexpense";
+     private String bucketName = "gasto_img";
 
-      private final IExpenseService service;
+     private final IGoogleService serviceGoogle;
+     private final IExpenseService service;
 
     @GetMapping("/expense")
     public ResponseEntity<List<ExpenseResponse>> getAllExpense(){
        return new ResponseEntity<>(service.getAllExpense(),HttpStatus.OK);
     }
 
-     @PostMapping("/expense")
-    public ResponseEntity<ExpenseDto> upExpense(@RequestBody ExpenseDto dto){
-       return new ResponseEntity<>(service.addExpense(dto), HttpStatus.CREATED);
+    @PostMapping(value = "/expense", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<ExpenseResponseGoogle> uploadIMG(@RequestPart("file") MultipartFile file, @RequestPart("dto") ExpenseDto dto) throws IOException {
+        String url = serviceGoogle.uploadObject(projectId,bucketName,dto.getName(),file.getInputStream());
+        return new ResponseEntity<>(service.addExpense(dto,url),HttpStatus.CREATED);
+
+
     }
 
-    @GetMapping("/provide")
-    public Credentials get() throws IOException {
-        return provider.getCredentials();
-    }
+
 //
 //    @PutMapping("/expense/{id}")
 //    public void udpateExpense(@PathVariable String id, @RequestParam int value){

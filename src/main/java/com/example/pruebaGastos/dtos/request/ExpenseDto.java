@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpenseDto {
+    private String name;
     private String description;
     private BigDecimal value;
 }
