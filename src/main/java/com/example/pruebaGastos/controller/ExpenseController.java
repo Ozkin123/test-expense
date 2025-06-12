@@ -1,8 +1,8 @@
 package com.example.pruebaGastos.controller;
 
 import com.example.pruebaGastos.dtos.request.ExpenseDto;
-import com.example.pruebaGastos.entity.response.ExpenseResponse;
-import com.example.pruebaGastos.entity.response.ExpenseResponseGoogle;
+import com.example.pruebaGastos.dtos.response.ExpenseResponse;
+import com.example.pruebaGastos.dtos.response.ExpenseResponseGoogle;
 import com.example.pruebaGastos.service.IExpenseService;
 import com.example.pruebaGastos.service.IGoogleService;
 import lombok.RequiredArgsConstructor;

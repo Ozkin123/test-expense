@@ -1,10 +1,9 @@
 package com.example.pruebaGastos.service;
 
 import com.example.pruebaGastos.dtos.request.ExpenseDto;
-import com.example.pruebaGastos.entity.response.ExpenseResponse;
+import com.example.pruebaGastos.dtos.response.ExpenseResponse;
 import com.example.pruebaGastos.entity.ExpenseEntity;
-import com.example.pruebaGastos.entity.response.ExpenseResponseGoogle;
-import com.example.pruebaGastos.google.auth.UploadObject;
+import com.example.pruebaGastos.dtos.response.ExpenseResponseGoogle;
 import com.example.pruebaGastos.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
